@@ -4,12 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NISMED AR</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
     <img src="logo.png" alt="Description of the image" id="header-image" />
     <h1>Preview</h1>
+    <p id="instructions">If your device is eligible, you can click the button on the lower right to enter AR mode.</p>
     <model-viewer id="model-viewer" 
                   src="model2.glb"
                   alt="A description of the model" 
