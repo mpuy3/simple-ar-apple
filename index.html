@@ -11,11 +11,15 @@
     <img src="logo.png" alt="Description of the image" id="header-image" />
     <h1>Preview</h1>
     <model-viewer id="model-viewer" 
-                  src="model.glb"
+                  src="model2.glb"
                   alt="A description of the model" 
                   auto-rotate 
                   camera-controls 
-                  ar>
+                  ar
+                  style="filter: brightness(0.67) contrast(3);"
+                  background-color="#CCCCCC"
+                  shadow-intensity="0"
+                  exposure="0.75">
     </model-viewer>
 
     <script src="script.js"></script> <!-- Link to the JavaScript file -->
