@@ -10,8 +10,14 @@ body {
 }
 
 h1 {
-  margin-bottom: 20px; /* Space below the heading */
+  margin-bottom: 5vh; /* Space below the heading */
+  font-size: 5vh;
   color: #333; /* Dark gray text color */
+}
+
+#header-image {
+  height: auto;
+  max-height: 15vh;
 }
 
 model-viewer {
