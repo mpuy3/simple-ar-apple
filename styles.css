@@ -17,13 +17,13 @@ h1 {
 
 #header-image {
   height: auto;
-  max-height: 25vh;
+  max-height: 10vh;
   padding: 0;
 }
 
 model-viewer {
   width: 100%; /* Full width */
-  max-width: 67vh; /* Maximum width of the model viewer */
+  max-width: 50vh; /* Maximum width of the model viewer */
   height: 50vh; /* Fixed height */
   border: 1px solid #ccc; /* Light gray border */
   border-radius: 8px; /* Rounded corners */
