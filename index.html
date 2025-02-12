@@ -14,8 +14,6 @@
       gesture-detector
       id="scene"
     >
-      <!-- raycaster -->
-      <a-entity raycaster="objects: .clickable" cursor></a-entity> 
       <!-- Marker 1 -->
       <a-marker
         type="pattern"
@@ -96,7 +94,13 @@
         ></a-entity>
       </a-marker>
 
-      <a-entity camera id="camera"></a-entity>
+      <a-entity camera id="camera">
+        <a-entity
+          cursor="fuse: false; rayOrigin: mouse;"
+          raycaster="objects: .clickable;"
+        >
+        </a-entity>
+      </a-entity>
     </a-scene>
 
     <script>
@@ -108,12 +112,16 @@
           const camera = document.querySelector("#camera");
 
           camera.addEventListener("click", (event) => {
-            const intersection = sceneEl.systems.raycaster.getIntersection(event);
+            const intersection =
+              sceneEl.systems.raycaster.getIntersection(event);
 
             if (intersection) {
               const clickedModel = intersection.object.el;
 
-              if (clickedModel && clickedModel.classList.contains("clickable")) {
+              if (
+                clickedModel &&
+                clickedModel.classList.contains("clickable")
+              ) {
                 if (activeModel) {
                   activeModel.removeAttribute("gesture-handler"); // Remove handler from previous model
                 }
