@@ -5,6 +5,7 @@
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
   </head>
+
   <body style="margin: 0px; overflow: hidden">
     <a-scene
       embedded
@@ -14,14 +15,16 @@
       gesture-detector
       id="scene"
     >
+      <!-- Camera with Raycaster -->
+      <a-entity id="camera" camera position="0 0 0">
+        <a-entity
+          cursor="fuse: false; rayOrigin: mouse;"
+          raycaster="objects: .clickable"
+        ></a-entity>
+      </a-entity>
+
       <!-- Marker 1 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/linear.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="rayOrigin: mouse;"
-      >
+      <a-marker type="pattern" url="assets/patterns2/linear.patt">
         <a-entity
           gltf-model="assets/models/linear.glb"
           position="0 0.5 0"
@@ -31,13 +34,7 @@
       </a-marker>
 
       <!-- Marker 2 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/trigonal_planar.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="rayOrigin: mouse;"
-      >
+      <a-marker type="pattern" url="assets/patterns2/trigonal_planar.patt">
         <a-entity
           gltf-model="assets/models/trigonal_planar.glb"
           position="0 0.5 0"
@@ -47,13 +44,7 @@
       </a-marker>
 
       <!-- Marker 3 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/tetrahedral.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="rayOrigin: mouse;"
-      >
+      <a-marker type="pattern" url="assets/patterns2/tetrahedral.patt">
         <a-entity
           gltf-model="assets/models/tetrahedral.glb"
           position="0 0.5 0"
@@ -63,13 +54,7 @@
       </a-marker>
 
       <!-- Marker 4 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/trigonal_bipyramidal.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="rayOrigin: mouse;"
-      >
+      <a-marker type="pattern" url="assets/patterns2/trigonal_bipyramidal.patt">
         <a-entity
           gltf-model="assets/models/trigonal_bipyramidal.glb"
           position="0 0.5 0"
@@ -79,13 +64,7 @@
       </a-marker>
 
       <!-- Marker 5 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/octahedral.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="rayOrigin: mouse;"
-      >
+      <a-marker type="pattern" url="assets/patterns2/octahedral.patt">
         <a-entity
           gltf-model="assets/models/octahedral.glb"
           position="0 0.5 0"
@@ -93,49 +72,33 @@
           class="clickable"
         ></a-entity>
       </a-marker>
-
-      <a-entity camera id="camera">
-        <a-entity
-          cursor="fuse: false; rayOrigin: mouse;"
-          raycaster="objects: .clickable;"
-        >
-        </a-entity>
-      </a-entity>
     </a-scene>
 
     <script>
-      let activeModel = null; // Keep track of the currently selected model
-
-      AFRAME.registerComponent("raycaster-listener", {
+      AFRAME.registerComponent("select-model", {
         init: function () {
-          const sceneEl = document.querySelector("a-scene");
-          const camera = document.querySelector("#camera");
+          const scene = document.querySelector("a-scene");
+          const raycaster = document.querySelector("[raycaster]");
 
-          camera.addEventListener("click", (event) => {
-            const intersection =
-              sceneEl.systems.raycaster.getIntersection(event);
+          raycaster.addEventListener("click", function (evt) {
+            let selectedModel = evt.detail.intersectedEl;
 
-            if (intersection) {
-              const clickedModel = intersection.object.el;
+            if (!selectedModel) return; // Exit if nothing was clicked
 
-              if (
-                clickedModel &&
-                clickedModel.classList.contains("clickable")
-              ) {
-                if (activeModel) {
-                  activeModel.removeAttribute("gesture-handler"); // Remove handler from previous model
-                }
+            console.log("Clicked on:", selectedModel);
 
-                activeModel = clickedModel;
-                activeModel.setAttribute("gesture-handler", ""); // Add handler to new model
-              }
-            }
+            // Remove gesture-handler from all models
+            document.querySelectorAll(".clickable").forEach((model) => {
+              model.removeAttribute("gesture-handler");
+            });
+
+            // Add gesture-handler to the clicked model
+            selectedModel.setAttribute("gesture-handler", "");
           });
         },
       });
 
-      // Attach raycaster-listener to the camera
-      document.querySelector("#camera").setAttribute("raycaster-listener", "");
+      document.querySelector("a-scene").setAttribute("select-model", "");
     </script>
   </body>
 </html>
