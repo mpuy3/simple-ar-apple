@@ -16,19 +16,19 @@
       id="scene"
     >
       <!-- Camera with Raycaster -->
-      <a-entity id="camera" camera position="0 0 0">
-        <a-entity
-          cursor="fuse: false; rayOrigin: mouse;"
-          raycaster="objects: .clickable"
-        ></a-entity>
-      </a-entity>
+      <a-entity
+        id="camera"
+        camera
+        position="0 0 0"
+        raycaster="objects: .clickable"
+        cursor="rayOrigin: mouse;"
+      ></a-entity>
 
       <!-- Marker 1 -->
       <a-marker
         type="pattern"
         url="assets/patterns2/linear.patt"
         emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
       >
         <a-entity
           gltf-model="assets/models/linear.glb"
@@ -43,7 +43,6 @@
         type="pattern"
         url="assets/patterns2/trigonal_planar.patt"
         emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
       >
         <a-entity
           gltf-model="assets/models/trigonal_planar.glb"
@@ -58,7 +57,6 @@
         type="pattern"
         url="assets/patterns2/tetrahedral.patt"
         emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
       >
         <a-entity
           gltf-model="assets/models/tetrahedral.glb"
@@ -73,7 +71,6 @@
         type="pattern"
         url="assets/patterns2/trigonal_bipyramidal.patt"
         emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
       >
         <a-entity
           gltf-model="assets/models/trigonal_bipyramidal.glb"
@@ -88,7 +85,6 @@
         type="pattern"
         url="assets/patterns2/octahedral.patt"
         emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
       >
         <a-entity
           gltf-model="assets/models/octahedral.glb"
@@ -103,12 +99,12 @@
       AFRAME.registerComponent("select-model", {
         init: function () {
           const scene = document.querySelector("a-scene");
-          const raycaster = document.querySelector("[raycaster]");
+          const camera = document.querySelector("#camera");
 
-          raycaster.addEventListener("click", function (evt) {
+          camera.addEventListener("click", function (evt) {
             let selectedModel = evt.detail.intersectedEl;
 
-            if (!selectedModel) return; // Exit if nothing was clicked
+            if (!selectedModel) return;
 
             console.log("Clicked on:", selectedModel);
 
@@ -117,7 +113,7 @@
               model.removeAttribute("gesture-handler");
             });
 
-            // Add gesture-handler to the clicked model
+            // Add gesture-handler only to the clicked model
             selectedModel.setAttribute("gesture-handler", "");
           });
         },
