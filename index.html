@@ -1,177 +1,17 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AR.js Model Switcher</title>
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  <!-- Gesture support -->
   <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const modelOptions = document.getElementById("model-options");
-      let currentModel = null;
-      let originalModelSrc = "";
-      let toggledModels = {};
-
-      // Function to show buttons
-      function showModelOptions(modelEntity) {
-        modelOptions.classList.remove("hidden");
-        currentModel = modelEntity;
-        originalModelSrc = modelEntity.getAttribute("gltf-model");
-      }
-
-      // Function to hide buttons
-      function hideModelOptions() {
-        modelOptions.classList.add("hidden");
-        currentModel = null;
-      }
-
-      // Handle clicking on a model
-      document.querySelectorAll(".clickable").forEach((entity) => {
-        entity.addEventListener("click", (event) => {
-          showModelOptions(event.target);
-        });
-      });
-
-      // Handle button clicks for swapping models
-      document.querySelectorAll(".model-btn").forEach((button) => {
-        button.addEventListener("click", () => {
-          if (!currentModel) return;
-
-          const type = button.dataset.type;
-          const baseName = originalModelSrc.replace(".glb", "");
-          const newModelSrc = baseName + `_${type}.glb`;
-
-          // Toggle back to the original model if clicked again
-          if (toggledModels[currentModel] === newModelSrc) {
-            currentModel.setAttribute("gltf-model", originalModelSrc);
-            delete toggledModels[currentModel];
-          } else {
-            currentModel.setAttribute("gltf-model", newModelSrc);
-            toggledModels[currentModel] = newModelSrc;
-          }
-        });
-      });
-
-      // Hide UI when markers are lost
-      document.querySelectorAll("a-marker").forEach((marker) => {
-        marker.addEventListener("markerFound", () => {
-          if (currentModel) showModelOptions(currentModel);
-        });
-        marker.addEventListener("markerLost", () => {
-          hideModelOptions();
-        });
-      });
-    });
-  </script>
-
-  <body style="margin: 0px; overflow: hidden">
-    <div id="model-options" class="hidden">
-      <button class="model-btn" data-type="coor">Coordinate</button>
-      <button class="model-btn" data-type="shape">Shape</button>
-      <button class="model-btn" data-type="space">Space</button>
-    </div>
-    <a-scene
-      embedded
-      arjs
-      embedded
-      renderer="logarithmicDepthBuffer: true;"
-      vr-mode-ui="enabled: false"
-      gesture-detector
-      id="scene"
-    >
-      <!-- Marker 1 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/linear.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
-      >
-        <a-entity
-          gltf-model="assets/models/linear.glb"
-          position="0 0.5 0"
-          scale="1 1 1"
-          smooth="true"
-          class="clickable"
-          gesture-handler
-        ></a-entity>
-      </a-marker>
-
-      <!-- Marker 2 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/trigonal_planar.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
-      >
-        <a-entity
-          gltf-model="assets/models/trigonal_planar.glb"
-          position="0 0.5 0"
-          scale="1 1 1"
-          smooth="true"
-          class="clickable"
-          gesture-handler
-        ></a-entity>
-      </a-marker>
-
-      <!-- Marker 3 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/tetrahedral.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
-      >
-        <a-entity
-          gltf-model="assets/models/tetrahedral.glb"
-          position="0 0.5 0"
-          scale="1 1 1"
-          smooth="true"
-          class="clickable"
-          gesture-handler
-        ></a-entity>
-      </a-marker>
-
-      <!-- Marker 4 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/trigonal_bipyramidal.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
-      >
-        <a-entity
-          gltf-model="assets/models/trigonal_bipyramidal.glb"
-          position="0 0.5 0"
-          scale="1 1 1"
-          smooth="true"
-          class="clickable"
-          gesture-handler
-        ></a-entity>
-      </a-marker>
-
-      <!-- Marker 5 -->
-      <a-marker
-        type="pattern"
-        url="assets/patterns2/octahedral.patt"
-        raycaster="objects: .clickable"
-        emitevents="true"
-        cursor="fuse: false; rayOrigin: mouse;"
-      >
-        <a-entity
-          gltf-model="assets/models/octahedral.glb"
-          position="0 0.5 0"
-          scale="1 1 1"
-          smooth="true"
-          class="clickable"
-          gesture-handler
-        ></a-entity>
-      </a-marker>
-      <a-entity camera></a-entity>
-    </a-scene>
-  </body>
   <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
     #model-options {
       position: absolute;
       bottom: 10%;
@@ -193,4 +33,97 @@
       display: none;
     }
   </style>
+</head>
+<body>
+  <!-- Model Switcher UI -->
+  <div id="model-options" class="hidden">
+    <button class="model-btn" data-type="coor">Coordinate</button>
+    <button class="model-btn" data-type="shape">Shape</button>
+    <button class="model-btn" data-type="space">Space</button>
+  </div>
+
+  <!-- AR Scene -->
+  <a-scene embedded arjs renderer="logarithmicDepthBuffer: true;" vr-mode-ui="enabled: false" gesture-detector id="scene">
+    
+    <!-- Marker 1 -->
+    <a-marker type="pattern" url="assets/patterns2/linear.patt" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <a-entity gltf-model="assets/models/linear.glb" position="0 0.5 0" scale="1 1 1" class="clickable" gesture-handler></a-entity>
+    </a-marker>
+
+    <!-- Marker 2 -->
+    <a-marker type="pattern" url="assets/patterns2/trigonal_planar.patt" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <a-entity gltf-model="assets/models/trigonal_planar.glb" position="0 0.5 0" scale="1 1 1" class="clickable" gesture-handler></a-entity>
+    </a-marker>
+
+    <!-- Marker 3 -->
+    <a-marker type="pattern" url="assets/patterns2/tetrahedral.patt" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <a-entity gltf-model="assets/models/tetrahedral.glb" position="0 0.5 0" scale="1 1 1" class="clickable" gesture-handler></a-entity>
+    </a-marker>
+
+    <!-- Marker 4 -->
+    <a-marker type="pattern" url="assets/patterns2/trigonal_bipyramidal.patt" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <a-entity gltf-model="assets/models/trigonal_bipyramidal.glb" position="0 0.5 0" scale="1 1 1" class="clickable" gesture-handler></a-entity>
+    </a-marker>
+
+    <!-- Marker 5 -->
+    <a-marker type="pattern" url="assets/patterns2/octahedral.patt" raycaster="objects: .clickable" emitevents="true" cursor="fuse: false; rayOrigin: mouse;">
+      <a-entity gltf-model="assets/models/octahedral.glb" position="0 0.5 0" scale="1 1 1" class="clickable" gesture-handler></a-entity>
+    </a-marker>
+
+    <a-entity camera></a-entity>
+  </a-scene>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const modelOptions = document.getElementById("model-options");
+      let currentModel = null;
+      let originalModelSrc = "";
+      let toggledModels = {};
+
+      function showModelOptions(modelEntity) {
+        modelOptions.classList.remove("hidden");
+        currentModel = modelEntity;
+        originalModelSrc = modelEntity.getAttribute("gltf-model");
+      }
+
+      function hideModelOptions() {
+        modelOptions.classList.add("hidden");
+        currentModel = null;
+      }
+
+      document.querySelectorAll(".clickable").forEach(entity => {
+        entity.addEventListener("click", (event) => {
+          showModelOptions(event.target);
+        });
+      });
+
+      document.querySelectorAll(".model-btn").forEach(button => {
+        button.addEventListener("click", () => {
+          if (!currentModel) return;
+
+          const type = button.dataset.type;
+          const baseName = originalModelSrc.replace(".glb", "");
+          const newModelSrc = baseName + `_${type}.glb`;
+
+          if (toggledModels[currentModel] === newModelSrc) {
+            currentModel.setAttribute("gltf-model", originalModelSrc);
+            delete toggledModels[currentModel];
+          } else {
+            currentModel.setAttribute("gltf-model", newModelSrc);
+            toggledModels[currentModel] = newModelSrc;
+          }
+        });
+      });
+
+      document.querySelectorAll("a-marker").forEach(marker => {
+        marker.addEventListener("markerFound", () => {
+          if (currentModel) showModelOptions(currentModel);
+        });
+        marker.addEventListener("markerLost", () => {
+          hideModelOptions();
+        });
+      });
+    });
+  </script>
+</body>
 </html>
