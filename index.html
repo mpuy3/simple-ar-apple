@@ -11,7 +11,7 @@
   </head>
 
   <body style="margin: 0; height: 100%; width: 100%">
-    <a-scene embedded arjs="debugUIEnabled: true">
+    <a-scene embedded>
       <!-- Marker 1 -->
       <a-marker type="pattern" url="assets/patterns/linear.patt">
         <a-entity gltf-model="assets/models/linear.glb" position="0 0.5 0" scale="0.5 0.5 0.5"></a-entity>
@@ -38,7 +38,7 @@
       </a-marker>
 
       <!-- Camera -->
-      <a-entity camera></a-entity>
+      <a-camera position="0 2 5"></a-camera>
     </a-scene>
   </body>
 </html>
