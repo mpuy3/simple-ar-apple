@@ -5,12 +5,13 @@ let scaleFactor = 1;
 // Attach event listeners to each a-entity in the scene
 const entities = sceneEl.querySelectorAll('a-entity');
 entities.forEach(el => {
-  el.addEventListener("onefingermove", (event) => handleRotation(event, el));
-  el.addEventListener("twofingermove", (event) => handleScale(event, el));
+  el.addEventListener("trackpad", (event) => handleRotation(event, el));
+  el.addEventListener("pinchmove", (event) => handleScale(event, el));
 });
 
 sceneEl.addEventListener("markerFound", (e) => {
   isMarkerVisible = true;
+  alert("Marker found!");
 });
 
 sceneEl.addEventListener("markerLost", (e) => {
