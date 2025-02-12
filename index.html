@@ -30,7 +30,7 @@
         models.forEach((modelName) => {
           const marker = document.createElement("a-marker");
           marker.setAttribute("type", "pattern");
-          marker.setAttribute("url", `assets/patterns/${modelName}.patt`);
+          marker.setAttribute("url", `./assets/patterns/${modelName}.patt`);
           marker.addEventListener("markerFound", () =>
             console.log(`Marker detected: ${modelName}`)
           );
@@ -39,7 +39,7 @@
           );
 
           const entity = document.createElement("a-entity");
-          entity.setAttribute("gltf-model", `assets/models/${modelName}.glb`);
+          entity.setAttribute("gltf-model", `./assets/models/${modelName}.glb`);
           entity.setAttribute("position", "0 0.5 0");
           entity.setAttribute("scale", "1 1 1");
 
