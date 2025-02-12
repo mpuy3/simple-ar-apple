@@ -14,10 +14,17 @@
       renderer="logarithmicDepthBuffer: true;"
       vr-mode-ui="enabled: false"
       gesture-detector
-      id="sceneE1"
+      id="scene"
     >
       <!-- Marker 1 -->
-      <a-marker type="pattern" url="assets/patterns2/linear.patt">
+      <a-marker
+        type="pattern"
+        url="assets/patterns2/linear.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
         <a-entity
           gltf-model="assets/models/linear.glb"
           position="0 0.5 0"
@@ -32,7 +39,14 @@
       </a-marker>
 
       <!-- Marker 2 -->
-      <a-marker type="pattern" url="assets/patterns2/trigonal_planar.patt">
+      <a-marker
+        type="pattern"
+        url="assets/patterns2/trigonal_planar.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
         <a-entity
           gltf-model="assets/models/trigonal_planar.glb"
           position="0 0.5 0"
@@ -47,7 +61,14 @@
       </a-marker>
 
       <!-- Marker 3 -->
-      <a-marker type="pattern" url="assets/patterns2/tetrahedral.patt">
+      <a-marker
+        type="pattern"
+        url="assets/patterns2/tetrahedral.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
         <a-entity
           gltf-model="assets/models/tetrahedral.glb"
           position="0 0.5 0"
@@ -62,7 +83,14 @@
       </a-marker>
 
       <!-- Marker 4 -->
-      <a-marker type="pattern" url="assets/patterns2/trigonal_bipyramidal.patt">
+      <a-marker
+        type="pattern"
+        url="assets/patterns2/trigonal_bipyramidal.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
         <a-entity
           gltf-model="assets/models/trigonal_bipyramidal.glb"
           position="0 0.5 0"
@@ -77,7 +105,14 @@
       </a-marker>
 
       <!-- Marker 5 -->
-      <a-marker type="pattern" url="assets/patterns2/octahedral.patt">
+      <a-marker
+        type="pattern"
+        url="assets/patterns2/octahedral.patt"
+        raycaster="objects: .clickable"
+        emitevents="true"
+        cursor="fuse: false; rayOrigin: mouse;"
+        id="markerA"
+      >
         <a-entity
           gltf-model="assets/models/octahedral.glb"
           position="0 0.5 0"
@@ -93,5 +128,4 @@
       <a-entity camera></a-entity>
     </a-scene>
   </body>
-  <script src="script.js"></script>
 </html>
