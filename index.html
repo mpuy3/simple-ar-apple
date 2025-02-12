@@ -1,31 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NISMED AR</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css"> <!-- Link to the CSS file -->
-    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-</head>
-<body>
-    <img src="logo.png" alt="Description of the image" id="header-image" />
-    <h1>Preview</h1>
-    <p id="instructions">If your device is eligible, you can click the button on the lower right to enter AR mode.</p>
-    <model-viewer id="model-viewer" 
-                  src="model2.glb"
-                  alt="A description of the model" 
-                  auto-rotate 
-                  camera-controls 
-                  ar
-                  style="filter: brightness(0.67) contrast(3);"
-                  background-color="#CCCCCC"
-                  shadow-intensity="0"
-                  exposure="0.75">
-    </model-viewer>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR.js Vanilla Web App</title>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
+  </head>
+  <body style="margin: 0; overflow: hidden">
+    <a-scene embedded arjs="debugUIEnabled: true">
+      <!-- Markers and models will be added dynamically -->
+      <a-entity camera></a-entity>
+    </a-scene>
 
-    <script src="script.js"></script> <!-- Link to the JavaScript file -->
-</body>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("AR.js Scene Loaded");
+
+        const models = [
+          "linear",
+          "trigonal_planar",
+          "tetrahedral",
+          "trigonal_bipyramidal",
+          "octahedral",
+        ];
+
+        const scene = document.querySelector("a-scene");
+
+        models.forEach((modelName) => {
+          const marker = document.createElement("a-marker");
+          marker.setAttribute("type", "pattern");
+          marker.setAttribute("url", `assets/patterns/${modelName}.patt`);
+          marker.addEventListener("markerFound", () =>
+            console.log(`Marker detected: ${modelName}`)
+          );
+          marker.addEventListener("markerLost", () =>
+            console.log(`Marker lost: ${modelName}`)
+          );
+
+          const entity = document.createElement("a-entity");
+          entity.setAttribute("gltf-model", `assets/models/${modelName}.glb`);
+          entity.setAttribute("position", "0 0.5 0");
+          entity.setAttribute("scale", "1 1 1");
+
+          marker.appendChild(entity);
+          scene.appendChild(marker);
+        });
+      });
+    </script>
+  </body>
 </html>
