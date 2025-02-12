@@ -1,6 +1,11 @@
 let sceneEl = document.querySelector('#sceneE1');
 let isMarkerVisible = false;
 let scaleFactor = 1;
+let initialTouchData = {
+  x: 0,
+  y: 0
+};
+let initialPinchDistance = 0;
 
 // Attach event listeners for markerFound and markerLost
 const markers = sceneEl.querySelectorAll('a-marker');
@@ -11,6 +16,7 @@ markers.forEach(marker => {
   // Marker visibility events
   marker.addEventListener('markerFound', () => {
     isMarkerVisible = true;
+    alert('Marker found!');
   });
 
   marker.addEventListener('markerLost', () => {
@@ -27,15 +33,6 @@ markers.forEach(marker => {
   entity.addEventListener('touchmove', (event) => handlePinchMove(event, entity));
 });
 
-
-// Store initial touch data for rotation
-let initialTouchData = {
-  x: 0,
-  y: 0
-};
-
-// Store initial pinch data for scaling
-let initialPinchDistance = 0;
 
 // Handle rotation for one-finger movement
 function handleTouchStart(event, el) {
