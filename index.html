@@ -4,49 +4,64 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AR.js Vanilla Web App</title>
+
+    <!-- Load A-Frame & AR.js -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.min.js"></script>
   </head>
+
   <body style="margin: 0; overflow: hidden">
     <a-scene embedded arjs="debugUIEnabled: true">
-      <!-- Markers and models will be added dynamically -->
+      <!-- Debugging Hiro Marker -->
+      <a-marker preset="hiro">
+        <a-box position="0 0.5 0" scale="0.3 0.3 0.3" material="color: red;"></a-box>
+      </a-marker>
+
+      <!-- Markers & Models -->
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+          console.log("AR.js Scene Loaded");
+
+          const models = [
+            "linear",
+            "trigonal_planar",
+            "tetrahedral",
+            "trigonal_bipyramidal",
+            "octahedral",
+          ];
+
+          const scene = document.querySelector("a-scene");
+
+          models.forEach((modelName) => {
+            const marker = document.createElement("a-marker");
+            marker.setAttribute("type", "pattern");
+
+            // Use absolute URLs (adjust your actual GitHub Pages URL)
+            const baseURL = "https://mpuy3.github.io/simple-ar-apple/assets";
+
+            marker.setAttribute("url", `${baseURL}/patterns/${modelName}.patt`);
+            marker.addEventListener("markerFound", () =>
+              console.log(`Marker detected: ${modelName}`)
+            );
+            marker.addEventListener("markerLost", () =>
+              console.log(`Marker lost: ${modelName}`)
+            );
+
+            const entity = document.createElement("a-entity");
+
+            // Use absolute URLs for models
+            entity.setAttribute("gltf-model", `${baseURL}/models/${modelName}.glb`);
+            entity.setAttribute("position", "0 0.5 0");
+            entity.setAttribute("scale", "1 1 1");
+
+            marker.appendChild(entity);
+            scene.appendChild(marker);
+          });
+        });
+      </script>
+
+      <!-- Camera -->
       <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        console.log("AR.js Scene Loaded");
-
-        const models = [
-          "linear",
-          "trigonal_planar",
-          "tetrahedral",
-          "trigonal_bipyramidal",
-          "octahedral",
-        ];
-
-        const scene = document.querySelector("a-scene");
-
-        models.forEach((modelName) => {
-          const marker = document.createElement("a-marker");
-          marker.setAttribute("type", "pattern");
-          marker.setAttribute("url", `./assets/patterns/${modelName}.patt`);
-          marker.addEventListener("markerFound", () =>
-            console.log(`Marker detected: ${modelName}`)
-          );
-          marker.addEventListener("markerLost", () =>
-            console.log(`Marker lost: ${modelName}`)
-          );
-
-          const entity = document.createElement("a-entity");
-          entity.setAttribute("gltf-model", `./assets/models/${modelName}.glb`);
-          entity.setAttribute("position", "0 0.5 0");
-          entity.setAttribute("scale", "1 1 1");
-
-          marker.appendChild(entity);
-          scene.appendChild(marker);
-        });
-      });
-    </script>
   </body>
 </html>
