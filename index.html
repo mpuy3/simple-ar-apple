@@ -3,6 +3,8 @@
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
   <!-- we import arjs version without NFT but with marker + location based support -->
   <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  <!-- Include aframe-event-set-component for handling events -->
+  <script src="https://cdn.jsdelivr.net/npm/aframe-event-set-component@4.1.2/dist/aframe-event-set-component.min.js"></script>
 
   <body style="margin: 0px; overflow: hidden">
     <a-scene embedded arjs id="ar-scene">
@@ -33,6 +35,36 @@
         modelEl.setAttribute('gltf-model', `assets/models/${marker.model}`);
         modelEl.setAttribute('position', '0 0.5 0');
         modelEl.setAttribute('scale', '1 1 1');
+
+        // Add rotation controls
+        modelEl.setAttribute('rotation', '0 0 0');
+        modelEl.setAttribute('event-set__mousedown', '_target: .; rotation: 0 0 0');
+        modelEl.setAttribute('event-set__mouseup', '_target: .; rotation: 0 0 0');
+        modelEl.setAttribute('event-set__touchstart', '_target: .; rotation: 0 0 0');
+        modelEl.setAttribute('event-set__touchend', '_target: .; rotation: 0 0 0');
+
+        // Add event listeners for mousemove and touchmove to rotate the model
+        modelEl.addEventListener('mousedown', () => {
+          modelEl.addEventListener('mousemove', handleRotation);
+        });
+
+        modelEl.addEventListener('mouseup', () => {
+          modelEl.removeEventListener('mousemove', handleRotation);
+        });
+
+        modelEl.addEventListener('touchstart', () => {
+          modelEl.addEventListener('touchmove', handleRotation);
+        });
+
+        modelEl.addEventListener('touchend', () => {
+          modelEl.removeEventListener('touchmove', handleRotation);
+        });
+
+        function handleRotation(event) {
+          const delta = event.movementX || event.touches[0].movementX || 0;
+          const currentRotation = modelEl.getAttribute('rotation').y;
+          modelEl.setAttribute('rotation', `0 ${currentRotation + delta} 0`);
+        }
 
         // Append the model to the marker
         markerEl.appendChild(modelEl);
