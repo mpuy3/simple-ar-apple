@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>AR Touch Rotate</title>
+    <title>AR Touch Rotate Around Itself</title>
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
   </head>
@@ -10,7 +10,7 @@
     <a-scene embedded arjs>
       <!-- AR Marker to place the object -->
       <a-marker preset="kanji">
-        <!-- 3D object to rotate -->
+        <!-- 3D object to rotate (box) -->
         <a-box id="rotate-box" position="0 0.5 0" color="#4CC3D9" depth="1" height="1" width="1"></a-box>
       </a-marker>
 
@@ -22,29 +22,29 @@
       const box = document.getElementById('rotate-box');
       let lastTouch = null;
 
-      // Function to handle touch movement
+      // Function to handle touch movement (to rotate the object)
       function onTouchMove(event) {
         event.preventDefault();
         if (lastTouch) {
           const deltaX = event.touches[0].clientX - lastTouch.clientX;
           const deltaY = event.touches[0].clientY - lastTouch.clientY;
           
-          // Rotate the object based on touch movement
+          // Rotate the object around its own axis (Y axis for horizontal, X for vertical)
           let rotation = box.getAttribute('rotation');
-          rotation.y += deltaX * 0.1; // Adjust sensitivity
-          rotation.x -= deltaY * 0.1; // Adjust sensitivity
+          rotation.y += deltaX * 0.1;  // Adjust sensitivity for horizontal rotation
+          rotation.x -= deltaY * 0.1;  // Adjust sensitivity for vertical rotation
           box.setAttribute('rotation', rotation);
         }
 
         lastTouch = event.touches[0];
       }
 
-      // Function to handle the start of touch (initial touch)
+      // Function to handle touch start (initial touch)
       function onTouchStart(event) {
         lastTouch = event.touches[0];
       }
 
-      // Function to handle the end of touch
+      // Function to handle touch end
       function onTouchEnd() {
         lastTouch = null;
       }
@@ -53,6 +53,30 @@
       box.addEventListener('touchstart', onTouchStart);
       box.addEventListener('touchmove', onTouchMove);
       box.addEventListener('touchend', onTouchEnd);
+
+      // For desktop, add mouse events for click and drag rotation
+      box.addEventListener('mousedown', function(event) {
+        lastTouch = { clientX: event.clientX, clientY: event.clientY };
+        event.preventDefault();
+      });
+
+      box.addEventListener('mousemove', function(event) {
+        if (lastTouch) {
+          const deltaX = event.clientX - lastTouch.clientX;
+          const deltaY = event.clientY - lastTouch.clientY;
+          
+          // Apply rotation to the object
+          let rotation = box.getAttribute('rotation');
+          rotation.y += deltaX * 0.1;  // Horizontal rotation
+          rotation.x -= deltaY * 0.1;  // Vertical rotation
+          box.setAttribute('rotation', rotation);
+          lastTouch = { clientX: event.clientX, clientY: event.clientY };
+        }
+      });
+
+      box.addEventListener('mouseup', function() {
+        lastTouch = null;
+      });
     </script>
   </body>
 </html>
