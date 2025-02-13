@@ -33,8 +33,6 @@
         modelEl.setAttribute('gltf-model', `assets/models/${marker.model}`);
         modelEl.setAttribute('position', '0 0.5 0');
         modelEl.setAttribute('scale', '1 1 1');
-
-        // Add rotation properties
         modelEl.setAttribute('rotation', '0 0 0');
 
         // Add event listeners for rotation
@@ -42,16 +40,19 @@
         let lastMouseX = 0;
 
         modelEl.addEventListener('mousedown', (event) => {
+          console.log('mousedown');
           isDragging = true;
           lastMouseX = event.clientX;
         });
 
         modelEl.addEventListener('mouseup', () => {
+          console.log('mouseup');
           isDragging = false;
         });
 
         modelEl.addEventListener('mousemove', (event) => {
           if (isDragging) {
+            console.log('mousemove');
             const deltaX = event.clientX - lastMouseX;
             const currentRotation = modelEl.getAttribute('rotation').y;
             modelEl.setAttribute('rotation', `0 ${currentRotation + deltaX} 0`);
@@ -60,16 +61,20 @@
         });
 
         modelEl.addEventListener('touchstart', (event) => {
+          console.log('touchstart');
           isDragging = true;
           lastMouseX = event.touches[0].clientX;
         });
 
         modelEl.addEventListener('touchend', () => {
+          console.log('touchend');
           isDragging = false;
         });
 
         modelEl.addEventListener('touchmove', (event) => {
+          event.preventDefault(); // Prevent default touch behavior
           if (isDragging) {
+            console.log('touchmove');
             const deltaX = event.touches[0].clientX - lastMouseX;
             const currentRotation = modelEl.getAttribute('rotation').y;
             modelEl.setAttribute('rotation', `0 ${currentRotation + deltaX} 0`);
