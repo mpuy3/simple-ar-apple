@@ -1,31 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AR Cube on Kanji Marker</title>
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-    <!-- we import arjs version without NFT but with marker + location based support -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  </head>
-  <body style="margin: 0; overflow: hidden">
-    <a-scene embedded arjs>
-      <!-- Marker for Kanji preset -->
-      <a-marker preset="kanji">
-        <!-- Cube that appears on the marker and rotates with touch -->
-        <a-box
-          id="rotatingCube"
-          position="0 0.5 0"
-          rotation="0 45 0"
-          color="blue"
-          scale="1 1 1"
-          touch-controls="rotate: true; gesture: true"
-          look-at="#marker"
-        ></a-box>
-      </a-marker>
+    <script src="https://unpkg.com/aframe-gesture-detector@^1.0.0/dist/aframe-gesture-detector.min.js"></script>
+</head>
+<body style="margin: 0; overflow: hidden;">
 
-      <!-- Camera setup -->
-      <a-entity camera></a-entity>
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+        <!-- Gesture detector -->
+        <a-entity id="gestureArea" gesture-detector></a-entity>
+
+        <!-- Marker for Kanji preset -->
+        <a-marker preset="kanji">
+            <!-- Cube that appears on the marker -->
+            <a-box id="cube" position="0 0.5 0" rotation="0 45 0" color="blue" scale="1 1 1" gesture-handler></a-box>
+        </a-marker>
+
+        <!-- Camera setup -->
+        <a-entity camera></a-entity>
     </a-scene>
-  </body>
+
+    <script>
+        AFRAME.registerComponent('gesture-handler', {
+            init: function () {
+                var el = this.el;
+                var rotation = el.getAttribute('rotation');
+
+                el.sceneEl.addEventListener('onefingerrotate', function (event) {
+                    rotation.y -= event.detail.positionChange.x * 2; // Rotate based on finger movement
+                    el.setAttribute('rotation', rotation);
+                });
+            }
+        });
+    </script>
+
+</body>
 </html>
+
