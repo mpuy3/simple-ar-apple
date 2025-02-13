@@ -5,6 +5,13 @@
     <!-- we import arjs version without NFT but with marker + location based support -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
     <style>
+      #ar-scene {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
       #button-box {
         position: absolute;
         display: none;
@@ -12,6 +19,9 @@
         padding: 10px;
         border-radius: 5px;
         z-index: 1000;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
       }
       .button {
         display: inline-block;
@@ -79,29 +89,17 @@
       // Handle intersection events
       sceneEl.addEventListener('raycaster-intersected', function (event) {
         if (event.detail.el.classList.contains('model')) {
+          console.log('Intersection detected with model:', event.detail.el);
           buttonBoxEl.style.display = 'block';
-          positionButtonBox(event.detail.intersection.point);
         }
       });
 
       sceneEl.addEventListener('raycaster-intersected-cleared', function (event) {
         if (event.detail.el.classList.contains('model')) {
+          console.log('Intersection cleared with model:', event.detail.el);
           buttonBoxEl.style.display = 'none';
         }
       });
-
-      // Function to position the button box in the 3D space
-      function positionButtonBox(intersectionPoint) {
-        const vector = new THREE.Vector3().copy(intersectionPoint);
-        vector.project(sceneEl.camera);
-
-        const canvas = sceneEl.canvas;
-        const x = (vector.x * 0.5 + 0.5) * canvas.clientWidth;
-        const y = (vector.y * -0.5 + 0.5) * canvas.clientHeight;
-
-        buttonBoxEl.style.left = `${x}px`;
-        buttonBoxEl.style.top = `${y}px`;
-      }
 
       // Function to handle button clicks
       function handleButtonClick(buttonText) {
