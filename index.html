@@ -4,51 +4,28 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AR Cube on Kanji Marker</title>
-    <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/gh/jeromeetienne/AR.js/aframe/build/aframe-ar.js"></script>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <!-- we import arjs version without NFT but with marker + location based support -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
   </head>
   <body style="margin: 0; overflow: hidden">
-    <a-scene embedded arjs>
-      <!-- Define the AR.js Marker -->
+    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+      <!-- Marker for Kanji preset -->
       <a-marker preset="kanji">
-        <!-- Create the cube that will appear on top of the marker -->
+        <!-- Cube that appears on the marker and rotates with touch -->
         <a-box
-          id="cube"
+          id="rotatingCube"
           position="0 0.5 0"
-          rotation="0 0 0"
-          color="#4CC3D9"
+          rotation="0 45 0"
+          color="blue"
           scale="1 1 1"
+          touch-controls="rotate: true; gesture: true"
+          look-at="#marker"
         ></a-box>
       </a-marker>
 
-      <!-- Camera setup for AR -->
-      <a-camera></a-camera>
+      <!-- Camera setup -->
+      <a-entity camera></a-entity>
     </a-scene>
-
-    <script>
-      // Get the cube element
-      let cube = document.querySelector("#cube");
-      let startTouch = 0;
-
-      window.addEventListener("touchstart", (e) => {
-        startTouch = e.touches[0].clientX;
-      });
-
-      window.addEventListener("touchmove", (e) => {
-        if (e.touches.length == 1) {
-          let deltaX = e.touches[0].clientX - startTouch;
-          let rotation = cube.getAttribute("rotation");
-
-          // Rotate the cube only along the Y-axis
-          rotation.y += deltaX * 0.1;
-
-          // Set the rotation back to the cube while keeping its position on the marker
-          cube.setAttribute("rotation", rotation);
-
-          // Update the start touch position for continuous rotation
-          startTouch = e.touches[0].clientX;
-        }
-      });
-    </script>
   </body>
 </html>
