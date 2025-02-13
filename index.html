@@ -1,110 +1,62 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AR Model Detection</title>
+
+    <!-- Include A-Frame and AR.js -->
     <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
     <!-- we import arjs version without NFT but with marker + location based support -->
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+  
     <style>
-      #ar-scene {
-        position: absolute;
-        top: 0;
-        left: 0;
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+
+      a-scene {
         width: 100%;
         height: 100%;
       }
-      #button-box {
-        position: absolute;
-        display: none;
-        background-color: #4CC3D9;
-        padding: 10px;
-        border-radius: 5px;
-        z-index: 1000;
-        bottom: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-      }
-      .button {
-        display: inline-block;
-        margin: 5px;
-        padding: 10px 20px;
-        background-color: #FF5733;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-      }
-      .button:hover {
-        background-color: #FF4500;
-      }
     </style>
   </head>
-  <body style="margin: 0px; overflow: hidden">
-    <a-scene embedded arjs id="ar-scene">
-      <a-entity camera raycaster="objects: .model"></a-entity>
+  <body>
+    <!-- A-Frame Scene with AR.js enabled -->
+    <a-scene embedded arjs>
+      <!-- AR Marker (Hiro Marker) -->
+      <a-marker preset="kanji">
+        <a-entity
+          gltf-model="assets/models/trigonal_planar.glb"
+          scale="0.5 0.5 0.5"
+          position="0 0 0"
+          id="robot"
+          class="clickable"
+        ></a-entity>
+      </a-marker>
+
+      <!-- Camera with Raycaster and Cursor -->
+      <a-camera
+        raycaster="objects: .clickable"
+        cursor="fuse: true; fuseTimeout: 500"
+      ></a-camera>
+
+      <!-- AR Scene background and grid -->
+      <a-entity
+        position="0 0 0"
+        geometry="primitive: plane; width: 50; height: 50"
+        material="color: #f0f0f0; opacity: 0.1"
+      ></a-entity>
     </a-scene>
 
-    <div id="button-box">
-      <button class="button" onclick="handleButtonClick('Button 1')">Button 1</button>
-      <button class="button" onclick="handleButtonClick('Button 2')">Button 2</button>
-      <button class="button" onclick="handleButtonClick('Button 3')">Button 3</button>
-    </div>
-
     <script>
-      // Define the markers and their corresponding models
-      const markers = [
-        { pattern: 'linear.patt', model: 'linear.glb' },
-        { pattern: 'trigonal_planar.patt', model: 'trigonal_planar.glb' },
-        { pattern: 'tetrahedral.patt', model: 'tetrahedral.glb' },
-        { pattern: 'trigonal_bipyramidal.patt', model: 'trigonal_bipyramidal.glb' },
-        { pattern: 'octahedral.patt', model: 'octahedral.glb' }
-      ];
-
-      // Get the scene element
-      const sceneEl = document.getElementById('ar-scene');
-
-      // Get the button box element
-      const buttonBoxEl = document.getElementById('button-box');
-
-      // Loop through the markers and create them dynamically
-      markers.forEach(marker => {
-        // Create a new marker entity
-        const markerEl = document.createElement('a-marker');
-        markerEl.setAttribute('type', 'pattern');
-        markerEl.setAttribute('url', `assets/patterns2/${marker.pattern}`);
-
-        // Create a new model entity
-        const modelEl = document.createElement('a-entity');
-        modelEl.setAttribute('gltf-model', `assets/models/${marker.model}`);
-        modelEl.setAttribute('position', '0 0.5 0');
-        modelEl.setAttribute('scale', '1 1 1');
-        modelEl.setAttribute('class', 'model');
-
-        // Append the model to the marker
-        markerEl.appendChild(modelEl);
-
-        // Append the marker to the scene
-        sceneEl.appendChild(markerEl);
+      // Listen for click events on the robot model (clickable class)
+      var robot = document.getElementById('robot');
+      robot.addEventListener('click', function () {
+        robot.setAttribute('scale', '1 1 1'); // Increase scale on click
+        // robot.setAttribute('color', 'red'); // Change color on click
       });
-
-      // Handle intersection events
-      sceneEl.addEventListener('raycaster-intersected', function (event) {
-        if (event.detail.el.classList.contains('model')) {
-          console.log('Intersection detected with model:', event.detail.el);
-          buttonBoxEl.style.display = 'block';
-        }
-      });
-
-      sceneEl.addEventListener('raycaster-intersected-cleared', function (event) {
-        if (event.detail.el.classList.contains('model')) {
-          console.log('Intersection cleared with model:', event.detail.el);
-          buttonBoxEl.style.display = 'none';
-        }
-      });
-
-      // Function to handle button clicks
-      function handleButtonClick(buttonText) {
-        alert(`Clicked ${buttonText}`);
-      }
     </script>
   </body>
 </html>
