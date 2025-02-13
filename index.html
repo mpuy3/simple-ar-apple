@@ -1,19 +1,44 @@
 <!DOCTYPE html>
 <html>
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
-  <!-- we import arjs version without NFT but with marker + location based support -->
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-
+  <head>
+    <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+    <!-- we import arjs version without NFT but with marker + location based support -->
+    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <style>
+      #button-box {
+        position: absolute;
+        display: none;
+        background-color: #4CC3D9;
+        padding: 10px;
+        border-radius: 5px;
+        z-index: 1000;
+      }
+      .button {
+        display: inline-block;
+        margin: 5px;
+        padding: 10px 20px;
+        background-color: #FF5733;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      .button:hover {
+        background-color: #FF4500;
+      }
+    </style>
+  </head>
   <body style="margin: 0px; overflow: hidden">
     <a-scene embedded arjs id="ar-scene">
       <a-entity camera raycaster="objects: .model"></a-entity>
-      <a-entity id="button-box" position="0 1.5 -0.5" scale="0.1 0.1 0.1" visible="false">
-        <a-entity geometry="primitive: box; depth: 0.5; height: 0.5; width: 1.5" material="color: #4CC3D9"></a-entity>
-        <a-entity id="button1" class="button" position="-0.5 0 0.25" geometry="primitive: box; depth: 0.1; height: 0.1; width: 0.5" material="color: #FF5733" text="value: Button 1; align: center;"></a-entity>
-        <a-entity id="button2" class="button" position="0 0 0.25" geometry="primitive: box; depth: 0.1; height: 0.1; width: 0.5" material="color: #FFC300" text="value: Button 2; align: center;"></a-entity>
-        <a-entity id="button3" class="button" position="0.5 0 0.25" geometry="primitive: box; depth: 0.1; height: 0.1; width: 0.5" material="color: #DAF7A6" text="value: Button 3; align: center;"></a-entity>
-      </a-entity>
     </a-scene>
+
+    <div id="button-box">
+      <button class="button" onclick="handleButtonClick('Button 1')">Button 1</button>
+      <button class="button" onclick="handleButtonClick('Button 2')">Button 2</button>
+      <button class="button" onclick="handleButtonClick('Button 3')">Button 3</button>
+    </div>
+
     <script>
       // Define the markers and their corresponding models
       const markers = [
@@ -54,16 +79,34 @@
       // Handle intersection events
       sceneEl.addEventListener('raycaster-intersected', function (event) {
         if (event.detail.el.classList.contains('model')) {
-          buttonBoxEl.setAttribute('visible', true);
-          buttonBoxEl.object3D.position.copy(event.detail.intersection.point).add(new THREE.Vector3(0, 1.5, -0.5));
+          buttonBoxEl.style.display = 'block';
+          positionButtonBox(event.detail.intersection.point);
         }
       });
 
       sceneEl.addEventListener('raycaster-intersected-cleared', function (event) {
         if (event.detail.el.classList.contains('model')) {
-          buttonBoxEl.setAttribute('visible', false);
+          buttonBoxEl.style.display = 'none';
         }
       });
+
+      // Function to position the button box in the 3D space
+      function positionButtonBox(intersectionPoint) {
+        const vector = new THREE.Vector3().copy(intersectionPoint);
+        vector.project(sceneEl.camera);
+
+        const canvas = sceneEl.canvas;
+        const x = (vector.x * 0.5 + 0.5) * canvas.clientWidth;
+        const y = (vector.y * -0.5 + 0.5) * canvas.clientHeight;
+
+        buttonBoxEl.style.left = `${x}px`;
+        buttonBoxEl.style.top = `${y}px`;
+      }
+
+      // Function to handle button clicks
+      function handleButtonClick(buttonText) {
+        alert(`Clicked ${buttonText}`);
+      }
     </script>
   </body>
 </html>
