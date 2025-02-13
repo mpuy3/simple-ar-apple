@@ -54,8 +54,8 @@
           if (isDragging) {
             console.log('mousemove');
             const deltaX = event.clientX - lastMouseX;
-            const currentRotation = modelEl.getAttribute('rotation').y;
-            modelEl.setAttribute('rotation', `0 ${currentRotation + deltaX} 0`);
+            const currentRotation = modelEl.object3D.rotation.y;
+            modelEl.object3D.rotation.y = currentRotation + THREE.MathUtils.degToRad(deltaX);
             lastMouseX = event.clientX;
           }
         });
@@ -76,8 +76,8 @@
           if (isDragging) {
             console.log('touchmove');
             const deltaX = event.touches[0].clientX - lastMouseX;
-            const currentRotation = modelEl.getAttribute('rotation').y;
-            modelEl.setAttribute('rotation', `0 ${currentRotation + deltaX} 0`);
+            const currentRotation = modelEl.object3D.rotation.y;
+            modelEl.object3D.rotation.y = currentRotation + THREE.MathUtils.degToRad(deltaX);
             lastMouseX = event.touches[0].clientX;
           }
         });
